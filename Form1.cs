@@ -17,10 +17,37 @@ namespace GW_Utility_V3
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
             //Prompt the user for the location of the PaymentGateway
+
             /* Method Goes Here: LocateGateway() */
+            await gatewayLoader.LocateGateway();
+
+            //Assign Properties to labels
+            label6.Text = gatewayProperties.Properties.InstalledLocation;
+            label6.Visible = true;
+
+            label7.Text = Convert.ToString(gatewayProperties.Properties.TotalTransactions);
+            label7.Visible = true;
+
+            label8.Text = "v" + gatewayProperties.Properties.InstalledVersion;
+            label8.Visible = true;
+
+            label9.Text = gatewayProperties.Properties.LatestTransaction;
+            label9.Visible = true;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            logForm Logs = new logForm();
+            Logs.ShowDialog();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            databaseForm database = new databaseForm();
+            database.ShowDialog();
         }
     }
 }

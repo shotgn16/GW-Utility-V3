@@ -1,5 +1,7 @@
-﻿using System;
+﻿using GW_Utility_V3.Properties;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,6 +16,9 @@ namespace GW_Utility_V3
         [STAThread]
         static void Main()
         {
+            if (Debugger.IsAttached)
+                Settings1.Default.Reset();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
