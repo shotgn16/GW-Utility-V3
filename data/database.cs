@@ -193,20 +193,25 @@ namespace GW_Utility_V3
             return transactions;
         }
 
-        internal static async Task<DataSet> userQuery(string Query, DataSet ds = null)
+        internal static async Task<DataTable> userQuery(string Query)
         {
+            DataTable dataTable = new DataTable();
+
             try
             {
-
                 Query = await DecryptQuery(Query);
 
                 using (var connection = await ConnectAsync())
                 {
                     await connection.OpenAsync();
 
-                    SqlCeDataAdapter dataAdapter = new SqlCeDataAdapter(Query, connection);
-                    var commandBuilder = new SqlCeCommandBuilder(dataAdapter);
-                    dataAdapter.Fill(ds);
+                    using (SqlCeCommand command = new SqlCeCommand(Query, connection))
+                    {
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            dataTable.Load(reader);
+                        }
+                    }
                 }
             }
 
@@ -215,73 +220,43 @@ namespace GW_Utility_V3
                 //Error
             }
 
-            return ds;
+            return dataTable;
         }
 
         internal static async Task<string> DecryptQuery(string Query)
         {
-            if (Query.Contains("parentpayUserID "))
+            if (Query.Contains("P_UserID "))
             {
-                string item = Query.Remove(0, Query.IndexOf("parentPayUserID"));
+                string item = Query.Remove(0, Query.IndexOf("P_UserID"));
                 item = Regex.Match(item, @"\d+").Value;
-
                 var item2 = await databaseHash.dbEncrypt(item, 1);
-
                 Query = Query.Replace(item, item2);
             }
 
-            if (Query.Contains("myqUserID"))
+            if (Query.Contains("M_UserID"))
             {
-                string item = Query.Remove(0, Query.IndexOf("myqUserID"));
+                string item = Query.Remove(0, Query.IndexOf("M_UserID"));
                 item = Regex.Match(item, @"\d+").Value;
-
                 var item2 = await databaseHash.dbEncrypt(item, 0);
-
                 Query = Query.Replace(item, item2);
             }
 
-            if (Query.Contains("newBalance"))
+            if (Query.Contains("UpdatedBalance"))
             {
-                string item = Query.Remove(0, Query.IndexOf("newBalance"));
+                string item = Query.Remove(0, Query.IndexOf("UpdatedBalance"));
                 item = Regex.Match(item, @"\d+").Value;
-
                 var item2 = await databaseHash.dbEncrypt(item, 4);
-
                 Query = Query.Replace(item, item2);
             }
 
-            if (Query.Contains("PPUID"))
+            if (Query.Contains("P_TransactionID"))
             {
-                string item = Query.Remove(0, Query.IndexOf("PPUID"));
+                string item = Query.Remove(0, Query.IndexOf("P_TransactionID"));
                 item = Regex.Match(item, @"\d+").Value;
-
-                var item2 = await databaseHash.dbEncrypt(item, 1);
-
-                Query = Query.Replace(item, item2);
-            }
-
-            if (Query.Contains("PPTID"))
-            {
-                string item = Query.Remove(0, Query.IndexOf("PPTID"));
-                item = Regex.Match(item, @"\d+").Value;
-
                 var item2 = await databaseHash.dbEncrypt(item, 3);
-
                 Query = Query.Replace(item, item2);
             }
-
-            if (Query.Contains("MYQUID"))
-            {
-                string item = Query.Remove(0, Query.IndexOf("MYQUID"));
-                item = Regex.Match(item, @"\d+").Value;
-
-                var item2 = await databaseHash.dbEncrypt(item, 0);
-
-                Query = Query.Replace(item, item2);
-            }
-
             return Query;
-            MessageBox.Show(Query);
         }
 
         internal class databaseHash
@@ -290,23 +265,12 @@ namespace GW_Utility_V3
             {
                 string[] returnValue = new string[6];
 
-                //MyQ UserID
-                returnValue[0] = "lrHvB4SBhqEqJSgI4pbw";
-
-                //ParentPay UserID
-                returnValue[1] = "joNYipgzSihArmsdxrjL";
-
-                //MyQ Access Token
-                returnValue[2] = "i73tNh514FMplj9cybSm";
-
-                //ParentPay PaymentID
-                returnValue[3] = "Gh7ZLvyi3mlV9SJxSXzX";
-
-                //newBalance
-                returnValue[4] = "n6TyARAdGOIsJ0S1Ge3M";
-
-                //Database Password (for export)
-                returnValue[5] = "jfiosru_fjsoruw3vva843";
+                returnValue[0] = "lrHvB4SBhqEqJSgI4pbw"; //MyQ UserID
+                returnValue[1] = "joNYipgzSihArmsdxrjL"; //ParentPay UserID
+                returnValue[2] = "i73tNh514FMplj9cybSm"; //MyQ Access Token
+                returnValue[3] = "Gh7ZLvyi3mlV9SJxSXzX"; //ParentPay PaymentID
+                returnValue[4] = "n6TyARAdGOIsJ0S1Ge3M"; //newBalance
+                returnValue[5] = "jfiosru_fjsoruw3vva843"; //Database Password (for export)
 
                 return Task.FromResult(returnValue[KeyNum].ToCharArray()).Result;
             }

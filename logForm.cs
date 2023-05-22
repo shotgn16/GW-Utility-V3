@@ -1,21 +1,22 @@
-﻿using GW_Utility_V3.data;
-using Newtonsoft.Json;
+﻿using MaterialSkin;
+using MaterialSkin.Controls;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 
 namespace GW_Utility_V3
 {
-    public partial class logForm : Form
+    public partial class logForm : MaterialForm
     {
         public logForm()
         {
             InitializeComponent();
+
+            var materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+            materialSkinManager.ColorScheme = new ColorScheme(Primary.Red800, Primary.Red900, Primary.Red500, Accent.Red200, TextShade.WHITE);
         }
 
         internal static string[] logFiles;
@@ -58,6 +59,8 @@ namespace GW_Utility_V3
 
         private void logForm_Load(object sender, EventArgs e)
         {
+            logdirectory_lbl.Text = "Log Directory: " + gatewayProperties.Properties.LogDirectory;
+            
             //Populate the comboBox with a list of log files found in the 'logs' folder
             string[] logfiles = Directory.GetFiles(gatewayProperties.Properties.LogDirectory);
 
