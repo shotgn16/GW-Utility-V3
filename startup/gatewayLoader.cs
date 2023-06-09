@@ -79,20 +79,22 @@ namespace GW_Utility_V3
 
         internal static async Task LocateGateway()
         {
-            if (!string.IsNullOrEmpty(Settings1.Default.gatewayLocation))
+            if (!string.IsNullOrEmpty(Settings.Default.gatewayLocation))
             {
-                gatewayProperties.Properties.AppConfigLocation = Settings1.Default.gatewayLocation + "AppConfig.json";   
+                gatewayProperties.Properties.AppConfigLocation = Settings.Default.gatewayLocation + "AppConfig.json";   
             }
 
-            else if (string.IsNullOrEmpty(Settings1.Default.gatewayLocation))
+            else if (string.IsNullOrEmpty(Settings.Default.gatewayLocation))
             {
                 gatewayProperties.Properties.AppConfigLocation = await requestLocation();
 
                 DialogResult dr = MessageBox.Show("Would you like to store this location for use in the future?", "Application Information", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                
-                if (dr == DialogResult.Yes) 
-                    Settings1.Default.gatewayLocation = gatewayProperties.Properties.AppConfigLocation.Replace("AppConfig.json", null);
-                    Settings1.Default.Save();
+
+                if (dr == DialogResult.Yes)
+                    //Issue here! Location not saving!
+                    gatewayProperties.Properties.AppConfigLocation.Replace("AppConfig.json", null);
+                        Settings.Default.gatewayLocation = gatewayProperties.Properties.AppConfigLocation;
+                        Settings.Default.Save();
             }
 
             string iLocation = gatewayProperties.Properties.AppConfigLocation.Replace("AppConfig.json", null);
@@ -100,7 +102,7 @@ namespace GW_Utility_V3
             //Check if location is valid deserilisation/retrieve locatons of the rest of the data
             validate.ValidLocation();
 
-            gatewayProperties.Properties.DatabaseLocation = iLocation + "db.sdf";
+            gatewayProperties.Properties.DatabaseLocation = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\PaymentGateway";
             gatewayProperties.Properties.InstalledLocation = iLocation;
             gatewayProperties.Properties.LogDirectory = iLocation + "logs";
 
@@ -110,7 +112,6 @@ namespace GW_Utility_V3
 
         internal static async Task LoadSQL()
         {
-            await database.CopyDatabase();
             gatewayProperties.Properties.NumberOfUsers = await database.getTotalUsers();
             gatewayProperties.Properties.LatestTransaction = await database.getLastestTransaction();
             gatewayProperties.Properties.TotalTransactions = await database.getTotalTransactions();
@@ -124,9 +125,8 @@ namespace GW_Utility_V3
         {
             string InstalLLocation = gatewayProperties.Properties.AppConfigLocation.Replace("AppConfig.json", null);
 
-            if (File.Exists(InstalLLocation + "AppConfig.json") && File.Exists(InstalLLocation + "db.sdf"))
+            if (File.Exists(InstalLLocation + "AppConfig.json") && File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\PaymentGateway\\db.sdf"))
             {
-
                 //Valid location!
                 using (StreamReader sr = File.OpenText(gatewayProperties.Properties.AppConfigLocation))
                 {

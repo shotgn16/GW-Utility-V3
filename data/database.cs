@@ -1,18 +1,13 @@
 ﻿using GW_Utility_V3.Properties;
-using Microsoft.SqlServer.TransactSql.ScriptDom;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlServerCe;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace GW_Utility_V3
 {
@@ -27,7 +22,7 @@ namespace GW_Utility_V3
                 if (File.Exists("db.sdf"))
                 {
                     connectionStringSettings = new ConnectionStringSettings();
-                    connectionStringSettings.ConnectionString = "DataSource=db.sdf;Password=" + await databaseHash.dbDecrypt(gatewayProperties.Properties.DatabasePassword, 5); ;
+                    connectionStringSettings.ConnectionString = "Data Source=db.sdf;Encrypt Database=True;Password=" + await databaseHash.dbDecrypt(gatewayProperties.Properties.DatabasePassword, 5) + ";File Mode=Shared Read;Persist Security Info=True;";
 
                     conn = new SqlCeConnection(connectionStringSettings.ConnectionString);
                 }
@@ -52,7 +47,7 @@ namespace GW_Utility_V3
             {
                 if (!File.Exists("db.sdf"))
                 {
-                    File.Copy(gatewayProperties.Properties.DatabaseLocation, AppDomain.CurrentDomain.BaseDirectory + "db.sdf");
+                    File.Copy(gatewayProperties.Properties.DatabaseLocation + "\\db.sdf", AppDomain.CurrentDomain.BaseDirectory + "\\db.sdf");
                 }
 
                 else if (File.Exists("db.sdf"))
@@ -60,14 +55,14 @@ namespace GW_Utility_V3
                     var newTime = System.DateTime.Now + TimeSpan.FromMinutes(10);
 
                     //Every time this IF statement is run, it checks if the file was copied at lest 10 minutes ago. If it was, it will copy a new one, if not it will throw an error.
-                    if (Settings1.Default.lastCopyTime >= newTime)
+                    if (Settings.Default.lastCopyTime >= newTime)
                     {
                         File.Delete("db.sdf");
 
-                        File.Copy(gatewayProperties.Properties.DatabaseLocation, AppDomain.CurrentDomain.BaseDirectory + "db.sdf");
+                        File.Copy(gatewayProperties.Properties.DatabaseLocation + "\\db.sdf", AppDomain.CurrentDomain.BaseDirectory + "db.sdf");
 
-                        Settings1.Default.lastCopyTime = System.DateTime.Now;
-                        Settings1.Default.Save();
+                        Settings.Default.lastCopyTime = System.DateTime.Now;
+                        Settings.Default.Save();
                     }
                 }
             }
@@ -113,7 +108,7 @@ namespace GW_Utility_V3
                 {
                     await connection.OpenAsync();
 
-                    using (SqlCeCommand command = new SqlCeCommand("SELECT DISTINCT myqUserID FROM paymentupdates;", connection))
+                    using (SqlCeCommand command = new SqlCeCommand("SELECT DISTINCT M_UserID FROM transactionHistory;", connection))
                     {
                         using (var reader = await command.ExecuteReaderAsync())
                         {
@@ -142,7 +137,7 @@ namespace GW_Utility_V3
                 {
                     await connection.OpenAsync();
 
-                    using (SqlCeCommand command = new SqlCeCommand("SELECT TOP 1 timeOfTransaction FROM paymentupdates ORDER BY timeOfTransaction DESC;", connection))
+                    using (SqlCeCommand command = new SqlCeCommand("SELECT TOP 1 TimeOfTransaction FROM creditTransactions ORDER BY TimeOfTransaction DESC;", connection))
                     {
                         using (var reader = await command.ExecuteReaderAsync())
                         {
@@ -172,7 +167,7 @@ namespace GW_Utility_V3
                 {
                     await connection.OpenAsync();
 
-                    using (SqlCeCommand command = new SqlCeCommand("SELECT [myqUserID] FROM [paymentupdates]", connection))
+                    using (SqlCeCommand command = new SqlCeCommand("SELECT M_UserID FROM creditTransactions", connection))
                     {
                         using (var reader = await command.ExecuteReaderAsync())
                         {
@@ -217,7 +212,7 @@ namespace GW_Utility_V3
 
             catch (Exception ex)
             {
-                //Error
+                databaseForm.dbRequestError = ex.Message;
             }
 
             return dataTable;
@@ -269,7 +264,7 @@ namespace GW_Utility_V3
                 returnValue[1] = "joNYipgzSihArmsdxrjL"; //ParentPay UserID
                 returnValue[2] = "i73tNh514FMplj9cybSm"; //MyQ Access Token
                 returnValue[3] = "Gh7ZLvyi3mlV9SJxSXzX"; //ParentPay PaymentID
-                returnValue[4] = "n6TyARAdGOIsJ0S1Ge3M"; //newBalance
+                returnValue[4] = "n6TyARAdGOIsJ0S1Ge3M"; //UpdatedBalance
                 returnValue[5] = "jfiosru_fjsoruw3vva843"; //Database Password (for export)
 
                 return Task.FromResult(returnValue[KeyNum].ToCharArray()).Result;

@@ -17,7 +17,7 @@ namespace GW_Utility_V3
         static void Main()
         {
             if (Debugger.IsAttached)
-                Settings1.Default.Reset();
+                Settings.Default.Reset();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

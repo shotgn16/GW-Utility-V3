@@ -18,10 +18,10 @@ namespace GW_Utility_V3
         {
             InitializeComponent();
 
-            var materialSkinManager = MaterialSkinManager.Instance;
+            colorScheme.defautTheme();
+
+            var materialSkinManager = colorScheme.globalInstance;
             materialSkinManager.AddFormToManage(this);
-            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
-            materialSkinManager.ColorScheme = new ColorScheme(Primary.Red800, Primary.Red900, Primary.Red500, Accent.Red200, TextShade.WHITE);
         }
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -55,6 +55,18 @@ namespace GW_Utility_V3
         {
             databaseForm database = new databaseForm();
             database.ShowDialog();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            settingForm SF = new settingForm();
+            SF.ShowDialog();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            serviceForm service = new serviceForm();
+            service.ShowDialog();
         }
     }
 }

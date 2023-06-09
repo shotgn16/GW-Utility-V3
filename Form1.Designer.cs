@@ -102,6 +102,7 @@
             this.button4.TabIndex = 8;
             this.button4.Text = "Startup Service";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // button2
             // 
@@ -112,6 +113,7 @@
             this.button2.TabIndex = 9;
             this.button2.Text = "Settings";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 

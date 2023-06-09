@@ -28,27 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.databaselocation_lbl = new System.Windows.Forms.Label();
             this.databaseversion_lbl = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.inputquery_rtbx = new System.Windows.Forms.RichTextBox();
             this.submitquery_btn = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
-            this.resulterror_lbl = new System.Windows.Forms.Label();
             this.validsql_lbl = new System.Windows.Forms.Label();
             this.queryResults_DGV = new System.Windows.Forms.DataGridView();
+            this.databaselocation_lbl = new System.Windows.Forms.LinkLabel();
+            this.resulterror_tbx = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.queryResults_DGV)).BeginInit();
             this.SuspendLayout();
-            // 
-            // databaselocation_lbl
-            // 
-            this.databaselocation_lbl.AutoSize = true;
-            this.databaselocation_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.databaselocation_lbl.Location = new System.Drawing.Point(19, 75);
-            this.databaselocation_lbl.Name = "databaselocation_lbl";
-            this.databaselocation_lbl.Size = new System.Drawing.Size(152, 20);
-            this.databaselocation_lbl.TabIndex = 3;
-            this.databaselocation_lbl.Text = "Database Location: ";
             // 
             // databaseversion_lbl
             // 
@@ -101,18 +91,6 @@
             this.label5.TabIndex = 22;
             this.label5.Text = "Result";
             // 
-            // resulterror_lbl
-            // 
-            this.resulterror_lbl.AutoSize = true;
-            this.resulterror_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.resulterror_lbl.ForeColor = System.Drawing.Color.Red;
-            this.resulterror_lbl.Location = new System.Drawing.Point(20, 358);
-            this.resulterror_lbl.Name = "resulterror_lbl";
-            this.resulterror_lbl.Size = new System.Drawing.Size(39, 16);
-            this.resulterror_lbl.TabIndex = 24;
-            this.resulterror_lbl.Text = "Error!";
-            this.resulterror_lbl.Visible = false;
-            // 
             // validsql_lbl
             // 
             this.validsql_lbl.AutoSize = true;
@@ -137,20 +115,45 @@
             this.queryResults_DGV.Size = new System.Drawing.Size(526, 98);
             this.queryResults_DGV.TabIndex = 26;
             // 
+            // databaselocation_lbl
+            // 
+            this.databaselocation_lbl.AutoSize = true;
+            this.databaselocation_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.databaselocation_lbl.LinkColor = System.Drawing.Color.Black;
+            this.databaselocation_lbl.Location = new System.Drawing.Point(19, 75);
+            this.databaselocation_lbl.Name = "databaselocation_lbl";
+            this.databaselocation_lbl.Size = new System.Drawing.Size(152, 20);
+            this.databaselocation_lbl.TabIndex = 27;
+            this.databaselocation_lbl.TabStop = true;
+            this.databaselocation_lbl.Text = "Database Location: ";
+            this.databaselocation_lbl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.databaselocation_lbl_LinkClicked);
+            // 
+            // resulterror_tbx
+            // 
+            this.resulterror_tbx.BackColor = System.Drawing.SystemColors.Control;
+            this.resulterror_tbx.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.resulterror_tbx.CausesValidation = false;
+            this.resulterror_tbx.Location = new System.Drawing.Point(19, 361);
+            this.resulterror_tbx.Name = "resulterror_tbx";
+            this.resulterror_tbx.ReadOnly = true;
+            this.resulterror_tbx.Size = new System.Drawing.Size(526, 50);
+            this.resulterror_tbx.TabIndex = 28;
+            this.resulterror_tbx.Text = "";
+            // 
             // databaseForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(568, 432);
+            this.Controls.Add(this.resulterror_tbx);
+            this.Controls.Add(this.databaselocation_lbl);
             this.Controls.Add(this.queryResults_DGV);
             this.Controls.Add(this.validsql_lbl);
-            this.Controls.Add(this.resulterror_lbl);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.submitquery_btn);
             this.Controls.Add(this.inputquery_rtbx);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.databaseversion_lbl);
-            this.Controls.Add(this.databaselocation_lbl);
             this.Name = "databaseForm";
             this.Text = "Database";
             this.Load += new System.EventHandler(this.databaseForm_Load);
@@ -161,14 +164,14 @@
         }
 
         #endregion
-        private System.Windows.Forms.Label databaselocation_lbl;
         private System.Windows.Forms.Label databaseversion_lbl;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.RichTextBox inputquery_rtbx;
         private System.Windows.Forms.Button submitquery_btn;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label resulterror_lbl;
         private System.Windows.Forms.Label validsql_lbl;
         private System.Windows.Forms.DataGridView queryResults_DGV;
+        private System.Windows.Forms.LinkLabel databaselocation_lbl;
+        private System.Windows.Forms.RichTextBox resulterror_tbx;
     }
 }

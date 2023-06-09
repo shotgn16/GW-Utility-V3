@@ -13,10 +13,8 @@ namespace GW_Utility_V3
         {
             InitializeComponent();
 
-            var materialSkinManager = MaterialSkinManager.Instance;
+            var materialSkinManager = colorScheme.globalInstance;
             materialSkinManager.AddFormToManage(this);
-            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
-            materialSkinManager.ColorScheme = new ColorScheme(Primary.Red800, Primary.Red900, Primary.Red500, Accent.Red200, TextShade.WHITE);
         }
 
         internal static string[] logFiles;

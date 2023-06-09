@@ -20,11 +20,11 @@ namespace GW_Utility_V3
         {
             InitializeComponent();
 
-            var materialSkinManager = MaterialSkinManager.Instance;
+            var materialSkinManager = colorScheme.globalInstance;
             materialSkinManager.AddFormToManage(this);
-            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
-            materialSkinManager.ColorScheme = new ColorScheme(Primary.Red800, Primary.Red900, Primary.Red500, Accent.Red200, TextShade.WHITE);
         }
+
+        internal static string dbRequestError;
 
         private async void submitquery_btn_Click(object sender, EventArgs e)
         {
@@ -48,12 +48,12 @@ namespace GW_Utility_V3
 
                     queryResults_DGV.ReadOnly = true;
 
-                    if (dataTable is null)
-                        { resulterror_lbl.ForeColor = Color.Red; 
-                          resulterror_lbl.Visible = true;
-                          resulterror_lbl.Text = "Error! An error occurred while processing your request, please try again..."; }
+                    if (dataTable.Rows.Count == 0)
+                        { resulterror_tbx.ForeColor = Color.Red;
+                        resulterror_tbx.Visible = true;
+                        resulterror_tbx.Text = "Error! " + dbRequestError; }
 
-                    else if (dataTable != null)
+                    else if (dataTable.Rows.Count > 0)
                         queryResults_DGV.DataSource = dataTable;
                 }
             }
@@ -83,11 +83,17 @@ namespace GW_Utility_V3
 
         private void databaseForm_Load(object sender, EventArgs e)
         {
-            databaselocation_lbl.Text = "Database Location: " + gatewayProperties.Properties.DatabaseLocation;
+            databaselocation_lbl.Text = "Database Location: " + gatewayProperties.Properties.DatabaseLocation + "\\db.sdf";
+            databaselocation_lbl.LinkArea = new LinkArea(19, 100);
 
             databaseversion_lbl.Text = "SQL Compact Version " + gatewayProperties.Properties.DatabaseVersion;
             databaseversion_lbl.BackColor = Color.Transparent;
             databaseversion_lbl.ForeColor = Color.White;
+        }
+
+        private void databaselocation_lbl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("explorer.exe", gatewayProperties.Properties.DatabaseLocation);
         }
     }
 }
